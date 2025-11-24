@@ -1,0 +1,11 @@
+groups:
+  - name: novapaiy_alerts
+    rules:
+      - alert: NovapaiyEndpointDown
+        expr: probe_success{app="Novapaiy"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Novapaiy endpoint is down"
+          description: "The Novapaiy API endpoint is unreachable or returned non-2xx responses."
