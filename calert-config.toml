@@ -1,0 +1,13 @@
+[app]
+address = "0.0.0.0:6000"
+server_timeout = "60s"
+enable_request_logs = true
+log = "info"
+
+[providers.calert_receiver]
+type = "google_chat"
+endpoint = "https://chat.googleapis.com/v1/spaces/AAQAyrraFIk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=ioHB2si_BMyrjS9Xc4ETf_yYEtyrPymsH-A0WetZx5U"
+max_idle_conns = 50
+timeout = "30s"
+threaded_replies = false
+template = "/app/template.tmpl"

@@ -1,0 +1,39 @@
+global:
+  resolve_timeout: 15s # Alertmanager will wait 15s  before sending a resolved notification.
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'shirinvoc@gmail.com'
+  smtp_auth_username: 'shirinvoc@gmail.com'
+  smtp_auth_password: 'eqzbuewiepqzwscs'
+  smtp_require_tls: true
+
+route:
+  group_by: ['alertname']
+  group_wait: 5s
+  group_interval: 15s
+  repeat_interval: 15s
+  receiver: 'email_receiver'
+
+  routes:
+    - match:
+         alertname: "NovapaiyAlert"
+      receiver: "calert_receiver"
+      continue: true
+    - match:
+         alertname: "NovapaiyAlert"
+      receiver: "email_receiver"
+
+receivers:
+  - name: 'email_receiver'
+    email_configs:
+      - to: 'shirinvoc@gmail.com'
+        send_resolved: true
+      - to: 'anasatwork99@gmail.com'
+        send_resolved: true
+        headers:
+          subject: '{{ template "email.subject" . }}'
+        html: '{{ template "email.html" . }}'
+
+  - name: 'calert_receiver'
+    webhook_configs:
+      - url: 'http://calert:6000/dispatch'  # points to your calert container
+        send_resolved: true

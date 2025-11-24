@@ -1,0 +1,9 @@
+{{ if eq .Status "firing" }}🔥 ALERT FIRING{{ else }}✅ ALERT RESOLVED{{ end }}
+
+{{ range $key, $value := .Labels -}}
+{{ $key }}: {{ $value }}
+{{ end -}}
+
+{{ range $key, $value := .Annotations -}}
+{{ $key }}: {{ $value }}
+{{ end -}}

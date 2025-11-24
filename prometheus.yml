@@ -1,0 +1,53 @@
+rule_files:
+  - "novapaiy_alerts.yml"
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "api_get_checks"
+    metrics_path: /probe
+    params:
+      module: [http_get_2xx]
+    static_configs:
+      - targets: ['http://10.255.254.77:8004/qa/health/']
+        labels:
+          app: 'QA'
+      - targets: ['http://10.255.254.77:8007/rfp/health/']
+        labels:
+          app: 'RFP'
+      - targets: ['http://10.255.254.77:8000/email/health/']
+        labels:
+          app: 'Email'
+      - targets: ['http://10.255.254.77:8003/health/']
+        labels:
+          app: 'Website'
+      - targets: ['http://10.255.254.77:8006/marketing/health/']
+        labels:
+          app: 'Marketing'
+      - targets: ['http://10.255.254.77:8005/shopper/health/']
+        labels:
+          app: 'Shopper'
+      - targets: ['https://novapaiy.com/api-v2/health/http']
+        labels:
+          app: 'Novapaiy'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
+
+  - job_name: "marketing_agent"
+    scrape_interval: 15s
+    metrics_path: /marketing/metrics
+    static_configs:
+      - targets:
+          - "10.255.254.77:8006"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "alertmanager:9093"
